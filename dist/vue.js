@@ -175,7 +175,10 @@
    * Check whether an object has the property.
    * hasOwnProperty() 方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性（也就是，是否有指定的键）。
    */
+  // 这种重命名方法在vue里面经常见到，用可以不用每次写完整的调用链
   var hasOwnProperty = Object.prototype.hasOwnProperty;
+  // 用一个简单的hasOwn方法就可以实现判断对象中是否有此属性的功能
+  // .call会返回调用者提供的 this 值和参数调用该函数的返回值。
   function hasOwn(obj, key) {
     return hasOwnProperty.call(obj, key)
   }
