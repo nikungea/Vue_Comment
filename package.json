@@ -1,0 +1,18 @@
+{
+  "name": "vue_code",
+  "version": "1.0.0",
+  "description": "mpaas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@10.129.40.170:lhq/vue_demo.git"
+  },
+  "author": "le",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^2.6.11"
+  }
+}
