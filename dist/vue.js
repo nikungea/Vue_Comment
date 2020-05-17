@@ -183,13 +183,20 @@
     return hasOwnProperty.call(obj, key)
   }
 
-  /** ToRead
+  /**
    * Create a cached version of a pure function.
+   * 创建一个cache对象用于缓存运行fn的运行结果
+   * 第二次调用时可以不用运行而直接取值
+   * 对于一些耗时的函数操作避免了多次执行
+   * 注意点：必须是pure function。（每次输入，对应的输出一定是一致的）
    */
   function cached(fn) {
+    // 创建一个空对象
     var cache = Object.create(null);
     return (function cachedFn(str) {
-      var hit = cache[str];
+      var hit = cache[str];  // 获取缓存的对象str属性的值
+      // 如果有，直接返回该值；
+      // 如果没有，执行之后将结果存到cache对象里，返回
       return hit || (cache[str] = fn(str))
     })
   }
@@ -205,6 +212,7 @@
 
   /**
    * Capitalize a string.
+   * 将字符串首字母大写
    */
   var capitalize = cached(function (str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
@@ -212,6 +220,7 @@
 
   /**
    * Hyphenate a camelCase string.
+   * 将驼峰形式的字符串转为用'-'连接
    */
   var hyphenateRE = /\B([A-Z])/g;
   var hyphenate = cached(function (str) {

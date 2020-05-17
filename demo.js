@@ -51,3 +51,24 @@ function toString(val) {
     ? JSON.stringify(val, null, 2)  // 转为json字符串，缩进两位
     : String(val); // 转为字符串
 }
+
+function cached(fn) {
+  var cache = Object.create(null);
+  console.log(cache, 'outer');
+  return (function cachedFn(str) {
+    var hit = cache[str];
+    console.log(cache, 'inner');
+    return hit || (cache[str] = fn(str))
+  })
+}
+
+let testFn = cached(function(id) {
+  console.log("执行testFn");
+  return id;
+});
+
+// testFn('123');
+
+console.log(testFn('123'));
+console.log(testFn('123'));
+
