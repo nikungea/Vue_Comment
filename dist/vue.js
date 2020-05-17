@@ -60,6 +60,8 @@
   /**
    * Get the raw type string of a value, e.g., [object Object].
    * 自定义_toString，获取值的类型，返回值格式为[object Object]
+   * slice() 提取字符串的一部分，并返回一个新的字符串，且不会改动原字符串。
+   * slice(begin, end)
    */
   var _toString = Object.prototype.toString;
   // 检测对象类型，从[object Object]截取出后面的比如'Object'字段
@@ -218,6 +220,7 @@
   /**
    * Capitalize a string.
    * 将字符串首字母大写
+   * charAt() 方法从一个字符串中返回指定的字符。
    */
   var capitalize = cached(function (str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
@@ -225,7 +228,7 @@
 
   /**
    * Hyphenate a camelCase string.
-   * 将驼峰形式的字符串转为用'-'连接
+   * 将驼峰形式的字符串转为小写且用'-'连接
    */
   var hyphenateRE = /\B([A-Z])/g;
   var hyphenate = cached(function (str) {
@@ -238,9 +241,22 @@
    * since native bind is now performant enough in most browsers.
    * But removing it would mean breaking code that was able to run in
    * PhantomJS 1.x, so this must be kept for backward compatibility.
+   * 实现对不支持bind的环境一个polyfill，目前大多已经支持，不过为了兼容性，还是留下了
+   * Polyfill: 一块代码（通常是 Web 上的 JavaScript），用来为旧浏览器提供它没有原生支持的较新的功能。
+   */
+
+  /**
+   * Istanbul 是 JavaScript 程序的代码覆盖率工具
+   * istanbul 提供注释语法，允许某些代码不计入覆盖率。
+   * 所谓代码覆盖率：
+   * 行覆盖率（line coverage）：是否每一行都执行了？
+   * 函数覆盖率（function coverage）：是否每个函数都调用了？
+   * 分支覆盖率（branch coverage）：是否每个if代码块都执行了？
+   * 语句覆盖率（statement coverage）：是否每个语句都执行了？
    */
 
   /* istanbul ignore next */
+  // 用apply()或call()来实现对bind()的polyfill
   function polyfillBind(fn, ctx) {
     function boundFn(a) {
       var l = arguments.length;
@@ -254,11 +270,12 @@
     boundFn._length = fn.length;
     return boundFn
   }
-
+  //调用原生的Function的原型上的bind()方法
   function nativeBind(fn, ctx) {
     return fn.bind(ctx)
   }
 
+  //如果Function的原型上有bind方法，则调用该方法，否则用自定义的polyfillBind()方法
   var bind = Function.prototype.bind
     ? nativeBind
     : polyfillBind;

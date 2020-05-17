@@ -54,10 +54,10 @@ function toString(val) {
 
 function cached(fn) {
   var cache = Object.create(null);
-  console.log(cache, 'outer');
+  // console.log(cache, 'outer');
   return (function cachedFn(str) {
     var hit = cache[str];
-    console.log(cache, 'inner');
+    // console.log(cache, 'inner');
     return hit || (cache[str] = fn(str))
   })
 }
@@ -67,8 +67,13 @@ let testFn = cached(function(id) {
   return id;
 });
 
-// testFn('123');
 
-console.log(testFn('123'));
-console.log(testFn('123'));
+// console.log(testFn('123'));
+// console.log(testFn('123'));
 
+var hyphenateRE = /\B([A-Z])/g;
+var hyphenate = cached(function (str) {
+  return str.replace(hyphenateRE, '-$1').toLowerCase()
+});
+
+console.log(hyphenate('helloWorld'));
