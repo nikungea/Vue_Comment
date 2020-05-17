@@ -18,6 +18,7 @@ import {
   defineReactive
 } from '../util/index'
 
+// Vue 上扩展的一些全局方法的定义，Vue 官网中关于全局 API 都可以在这里找到
 export function initGlobalAPI (Vue: GlobalAPI) {
   // config
   const configDef = {}

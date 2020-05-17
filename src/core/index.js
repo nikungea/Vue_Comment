@@ -3,11 +3,14 @@
  * Vue 实例化、观察者、虚拟 DOM、工具函数等等。
  * 这里的代码是 Vue.js 的核心
  */
+
 import Vue from './instance/index'
+// 初始化全局API
 import { initGlobalAPI } from './global-api/index'
 import { isServerRendering } from 'core/util/env'
 import { FunctionalRenderContext } from 'core/vdom/create-functional-component'
 
+// 给 Vue 这个对象本身扩展全局的静态方法
 initGlobalAPI(Vue)
 
 Object.defineProperty(Vue.prototype, '$isServer', {

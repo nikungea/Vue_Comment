@@ -33,12 +33,19 @@ extend(Vue.options.components, platformComponents)
 // install platform patch function
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
+/**
+ * $mount 方法支持传入 2 个参数
+ * 第一个是 el，它表示挂载的元素，可以是字符串，也可以是 DOM 对象，
+ * 如果是字符串在浏览器环境下会调用 query 方法转换成 DOM 对象的。
+ * 第二个参数是和服务端渲染相关，在浏览器环境下我们不需要传第二个参数。
+ */
 // public mount method
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // $mount 方法实际上会去调用 mountComponent 方法
   return mountComponent(this, el, hydrating)
 }
 

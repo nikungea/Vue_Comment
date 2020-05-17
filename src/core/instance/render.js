@@ -1,5 +1,9 @@
 /* @flow */
 
+/**
+ * Vue 的 _render 方法是实例的一个私有方法，它用来把实例渲染成一个虚拟 Node。
+ */
+
 import {
   warn,
   nextTick,

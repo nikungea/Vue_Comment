@@ -1,5 +1,7 @@
 /* @flow */
-
+/**
+ * Vue.js 构建过程，在 web 应用下，Runtime + Compiler 构建入口
+ */
 import config from 'core/config'
 import { warn, cached } from 'core/util/index'
 import { mark, measure } from 'core/util/perf'
@@ -14,6 +16,7 @@ const idToTemplate = cached(id => {
   return el && el.innerHTML
 })
 
+// compiler 版本的 $mount 实现
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
@@ -22,6 +25,7 @@ Vue.prototype.$mount = function (
   el = el && query(el)
 
   /* istanbul ignore if */
+  // Vue 不能挂载在 body、html 这样的根节点上
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
@@ -31,6 +35,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 如果没有定义 render 方法，则会把 el 或者 template 字符串转换成 render 方法。
   if (!options.render) {
     let template = options.template
     if (template) {
@@ -79,6 +84,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  // 调用原先原型上的 $mount 方法挂载
   return mount.call(this, el, hydrating)
 }
 
