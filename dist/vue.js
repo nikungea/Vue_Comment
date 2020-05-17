@@ -204,7 +204,12 @@
   /**
    * Camelize a hyphen-delimited string.
    * 将用'-'连接的字符串转为驼峰形式
+   * replace() 方法返回一个由替换值（replacement）替换一些或所有匹配的模式（pattern）后的新字符串。
+   * 模式可以是一个字符串或者一个正则表达式，替换值可以是一个字符串或者一个每次匹配都要调用的回调函数。
+   * 原字符串不会改变。
    */
+  // 正则匹配，该表达式将匹配出所有字符串-后面带有字母的字符串
+  // \w 匹配字母数字下划线，等同于：[a - zA - Z0 -9_]
   var camelizeRE = /-(\w)/g;
   var camelize = cached(function (str) {
     return str.replace(camelizeRE, function (_, c) { return c ? c.toUpperCase() : ''; })
