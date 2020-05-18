@@ -46,16 +46,23 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 export function initState (vm: Component) {
+  // 首先在vm上初始化一个_watchers数组，缓存这个vm上的所有watcher
   vm._watchers = []
+  // 获取options,包括在new Vue传入的，同时还包括了Vue所继承的options
   const opts = vm.$options
+  // 初始化props属性
   if (opts.props) initProps(vm, opts.props)
+  // 初始化methods属性
   if (opts.methods) initMethods(vm, opts.methods)
+  // 初始化data属性
   if (opts.data) {
     initData(vm)
   } else {
     observe(vm._data = {}, true /* asRootData */)
   }
+  // 初始化computed属性
   if (opts.computed) initComputed(vm, opts.computed)
+  // 初始化watch属性
   if (opts.watch && opts.watch !== nativeWatch) {
     initWatch(vm, opts.watch)
   }

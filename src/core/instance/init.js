@@ -17,7 +17,8 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
 
-export function initMixin (Vue: Class<Component>) {
+export function initMixin(Vue: Class<Component>) {
+  // 原型上提供_init方法,新建一个vue实例并传入options参数
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -40,6 +41,7 @@ export function initMixin (Vue: Class<Component>) {
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
+      // 将传入的这些options选项挂载到vm.$options属性上
       vm.$options = mergeOptions(
         resolveConstructorOptions(vm.constructor),
         options || {},
@@ -54,13 +56,22 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
+    /**
+     * 接下来所有的操作都是在这个实例上添加方法
+     */
+    // lifecycle初始化
     initLifecycle(vm)
+    // events初始化 vm._events, 主要是提供vm实例上的$on/$emit/$off/$off等方法
     initEvents(vm)
+    // 初始化渲染函数,在vm上绑定$createElement方法
     initRender(vm)
+    // 钩子函数的执行, beforeCreate
     callHook(vm, 'beforeCreate')
     initInjections(vm) // resolve injections before data/props
+    // Observe data添加对data的监听, 将data转化为getters/setters
     initState(vm)
     initProvide(vm) // resolve provide after data/props
+    // 钩子函数的执行, created
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -78,7 +89,7 @@ export function initMixin (Vue: Class<Component>) {
   }
 }
 
-export function initInternalComponent (vm: Component, options: InternalComponentOptions) {
+export function initInternalComponent(vm: Component, options: InternalComponentOptions) {
   const opts = vm.$options = Object.create(vm.constructor.options)
   // doing this because it's faster than dynamic enumeration.
   const parentVnode = options._parentVnode
@@ -97,7 +108,7 @@ export function initInternalComponent (vm: Component, options: InternalComponent
   }
 }
 
-export function resolveConstructorOptions (Ctor: Class<Component>) {
+export function resolveConstructorOptions(Ctor: Class<Component>) {
   let options = Ctor.options
   if (Ctor.super) {
     const superOptions = resolveConstructorOptions(Ctor.super)
@@ -121,7 +132,7 @@ export function resolveConstructorOptions (Ctor: Class<Component>) {
   return options
 }
 
-function resolveModifiedOptions (Ctor: Class<Component>): ?Object {
+function resolveModifiedOptions(Ctor: Class<Component>): ?Object {
   let modified
   const latest = Ctor.options
   const sealed = Ctor.sealedOptions

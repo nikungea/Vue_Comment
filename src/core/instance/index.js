@@ -19,7 +19,7 @@ function Vue (options) {
   this._init(options)
 }
 /**
- * 给 Vue 的 prototype 上扩展一些方法。
+ * 对Vue这个class进行mixin,即给 Vue 的 prototype 上扩展一些方法。
  * Vue 按功能把这些扩展分散到多个模块中去实现，而不是在一个模块里实现所有。
  * 方便代码的维护和管理
  */
