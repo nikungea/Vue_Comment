@@ -303,6 +303,10 @@
 
   /**
    * Mix properties into target object.
+   * 将源对象属性注入目标对象，返回目标对象，类似于合并对象
+   * 也可以使用Object.assign()
+   * 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。
+   * 它将返回目标对象。
    */
   function extend(to, _from) {
     for (var key in _from) {

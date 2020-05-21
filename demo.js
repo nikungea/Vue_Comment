@@ -48,8 +48,8 @@ function toString(val) {
   return val == null
     ? ""
     : Array.isArray(val) || (isPlainObject(val) && val.toString === _toString)  // 是否为数组 || (是否为Plain Object且原型链上有toString方法)
-    ? JSON.stringify(val, null, 2)  // 转为json字符串，缩进两位
-    : String(val); // 转为字符串
+      ? JSON.stringify(val, null, 2)  // 转为json字符串，缩进两位
+      : String(val); // 转为字符串
 }
 
 function cached(fn) {
@@ -98,3 +98,12 @@ let arrLike = {
 // let arr = Array.prototype.slice.call(arrLike);
 // let arr = [...arrLike]
 // console.log(arr);
+function extend(to, _from) {
+  for (var key in _from) {
+    to[key] = _from[key];
+  }
+  return to
+}
+let obj1 = { a: 1, b: 2, c: 3 };
+let obj2 = { d: 4, e: 5, f: 6 };
+console.log(extend(obj1, obj2));
