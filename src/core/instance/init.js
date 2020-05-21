@@ -50,6 +50,7 @@ export function initMixin(Vue: Class<Component>) {
     }
     /* istanbul ignore else */
     if (process.env.NODE_ENV !== 'production') {
+      // 作用域代理，拦截组件内访问其它组件的数据
       initProxy(vm)
     } else {
       vm._renderProxy = vm
@@ -58,20 +59,39 @@ export function initMixin(Vue: Class<Component>) {
     vm._self = vm
     /**
      * 接下来所有的操作都是在这个实例上添加方法
+     * lifecycle初始化，建立父子组件关系，在当前实例上添加一些属性和生命周期标识
+     * 如：$children、$refs、_isMounted等。
      */
-    // lifecycle初始化
     initLifecycle(vm)
-    // events初始化 vm._events, 主要是提供vm实例上的$on/$emit/$off/$off等方法
+    /**
+     * events初始化 vm._events, 主要是提供vm实例上的$on/$emit/$off/$off等方法
+     */
     initEvents(vm)
-    // 初始化渲染函数,在vm上绑定$createElement方法
+    /**
+     * 初始化渲染函数,在vm上绑定$createElement方法；
+     * 用于初始化$slots、$attrs、$listeners
+     */
     initRender(vm)
-    // 钩子函数的执行, beforeCreate
+    /**
+     * 钩子函数的执行, beforeCreate
+     */
     callHook(vm, 'beforeCreate')
+    /**
+     * 初始化inject，一般用于更深层次的组件通信，相当于加强版的props。用于组件库开发较多。
+     */
     initInjections(vm) // resolve injections before data/props
-    // Observe data添加对data的监听, 将data转化为getters/setters
+    /**
+     * Observe data添加对data的监听, 将data转化为getters/setters
+     * 很多选项初始化的汇总，包括：props、methods、data、computed 和 watch 等。
+     */
     initState(vm)
+    /**
+     * 初始化provide
+     */
     initProvide(vm) // resolve provide after data/props
-    // 钩子函数的执行, created
+    /**
+     * 钩子函数的执行, created
+     */
     callHook(vm, 'created')
 
     /* istanbul ignore if */
@@ -80,9 +100,11 @@ export function initMixin(Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
-    // 在初始化的最后，检测到如果有 el 属性，则调用 vm.$mount 方法挂载 vm
-    // 挂载的目标就是把模板渲染成最终的 DOM
+    
+    /**
+     * 在初始化的最后，检测到如果有 el 属性，则调用 vm.$mount 方法挂载 vm
+     * 挂载的目标就是把模板渲染成最终的 DOM
+     */
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
