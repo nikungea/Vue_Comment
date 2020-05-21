@@ -282,6 +282,14 @@
 
   /**
    * Convert an Array-like object to a real Array.
+   * 将伪数组转为真数组
+   * 其实有更多比较便捷的方法，不知道尤大为什么选这个复杂点的，为了兼容性？或者是为了可以传入起始位置
+   * 方法一：let arr = Array.prototype.slice.call(arrLike)
+   * 或[].slice.call()，上面的写法性能会高一点
+   * 以下ES6新增
+   * 方法二：let arr = Array.from(arrLike)
+   * 方法三：let arr = [...arrLike]，这种方法比较有局限性，
+   * 需要保证伪数组可迭代，内部要有Symbol(Symbol.iterator)
    */
   function toArray(list, start) {
     start = start || 0;

@@ -62,10 +62,10 @@ function cached(fn) {
   })
 }
 
-let testFn = cached(function(id) {
-  console.log("执行testFn");
-  return id;
-});
+// let testFn = cached(function(id) {
+//   console.log("执行testFn");
+//   return id;
+// });
 
 
 // console.log(testFn('123'));
@@ -76,4 +76,25 @@ var hyphenate = cached(function (str) {
   return str.replace(hyphenateRE, '-$1').toLowerCase()
 });
 
-console.log(hyphenate('helloWorld'));
+// console.log(hyphenate('helloWorld'));
+
+function toArray(list, start) {
+  start = start || 0;
+  let i = list.length - start;
+  let ret = new Array(i);
+  while (i--) {
+    ret[i] = list[i + start];
+  }
+  return ret;
+}
+let arrLike = {
+  0: 'a',
+  1: 'b',
+  2: 'c',
+  length: 3,
+}
+
+// console.log(toArray(arrLike));
+// let arr = Array.prototype.slice.call(arrLike);
+// let arr = [...arrLike]
+// console.log(arr);
