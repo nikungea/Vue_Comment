@@ -590,12 +590,15 @@
     }
   }
 
-  /*  */
-
+  
   // can we use __proto__?
   var hasProto = '__proto__' in {};
-
-  // Browser environment sniffing
+  
+  /**
+   * Browser environment sniffing
+   * 检查浏览器环境的一系列操作
+   */
+  // 通过判断 `window` 对象是否存在即可
   var inBrowser = typeof window !== 'undefined';
   var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
   var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
