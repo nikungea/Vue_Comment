@@ -414,6 +414,9 @@
 
   /**
    * Ensure a function is called only once.
+   * 以called作为回调标识符，确保方法只被调用一次
+   * 调用此函数时，called标示符改变，下次调用无效
+   * 典型的闭包调用。
    */
   function once(fn) {
     var called = false;
@@ -432,7 +435,7 @@
     'directive',
     'filter'
   ];
-
+  // 生命周期钩子常量数组
   var LIFECYCLE_HOOKS = [
     'beforeCreate',
     'created',
@@ -445,6 +448,7 @@
     'activated',
     'deactivated',
     'errorCaptured',
+    // 2.6新增 用来处理ssr，允许在渲染过程中“等待”异步数据，可在任何组件中使用。
     'serverPrefetch'
   ];
 
@@ -593,19 +597,26 @@
     }
   }
 
-  
-  // can we use __proto__?
+
+  /**
+   * can we use __proto__?
+   * 检查当前环境是否可以使用对象的 __proto__ 属性
+   * 一个对象的 __proto__ 属性指向了其构造函数的原型
+   * 从一个空的对象字面量开始沿着原型链逐级检查
+   */
   var hasProto = '__proto__' in {};
-  
+
   /**
    * Browser environment sniffing
-   * 检查浏览器环境的一系列操作
+   * 检查当前环境的一系列操作
    */
-  // 通过判断 `window` 对象是否存在即可
+  // 检测当前宿主环境是否是浏览器，通过判断 `window` 对象是否存在即可
   var inBrowser = typeof window !== 'undefined';
   var inWeex = typeof WXEnvironment !== 'undefined' && !!WXEnvironment.platform;
   var weexPlatform = inWeex && WXEnvironment.platform.toLowerCase();
+  // 获取当浏览器的userAgent，转为小写，方便后续操作
   var UA = inBrowser && window.navigator.userAgent.toLowerCase();
+  // IE浏览器判断，使用正则去匹配 UA 中是否包含'msie'或者'trident'这两个字符串即可判断是否为 IE 浏览器
   var isIE = UA && /msie|trident/.test(UA);
   var isIE9 = UA && UA.indexOf('msie 9.0') > 0;
   var isEdge = UA && UA.indexOf('edge/') > 0;
@@ -4288,7 +4299,11 @@
       callHook(vm, 'deactivated');
     }
   }
-
+  /**
+   * 调用生命周期函数
+   * 根据传入的字符串 hook，去拿到 vm.$options[hook] 对应的回调函数数组
+   * 然后遍历执行，执行的时候把 vm 作为函数执行的上下文。
+   */
   function callHook(vm, hook) {
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
