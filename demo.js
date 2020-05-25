@@ -106,4 +106,16 @@ function extend(to, _from) {
 }
 let obj1 = { a: 1, b: 2, c: 3 };
 let obj2 = { d: 4, e: 5, f: 6 };
-console.log(extend(obj1, obj2));
+// console.log(extend(obj1, obj2));
+
+function toObject(arr) {
+  let res = {};
+  for (let i = 0; i< arr.length; i++) {
+    if(arr[i]) {
+      extend(res, arr[i]);
+    }
+  }
+  return res;
+}
+let test = [{a:'wer'}, {b:234}];
+console.log(toObject(test));

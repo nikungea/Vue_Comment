@@ -317,6 +317,7 @@
 
   /**
    * Merge an Array of Objects into a single Object.
+   * 将对象数组中的对象合并为单个对象并返回
    */
   function toObject(arr) {
     var res = {};
@@ -339,6 +340,7 @@
 
   /**
    * Always return false.
+   * 永远返回false
    */
   var no = function (a, b, c) { return false; };
 
@@ -346,6 +348,7 @@
 
   /**
    * Return the same value.
+   * shit in, shit out, lol
    */
   var identity = function (_) { return _; };
 
