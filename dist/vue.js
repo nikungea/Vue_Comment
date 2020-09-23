@@ -4,6 +4,8 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
+  // 大佬们写代码这严谨的类型检查
+  // typeof 'a' === 'string'
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
     typeof define === 'function' && define.amd ? define(factory) :
       (global = global || self, global.Vue = factory());
