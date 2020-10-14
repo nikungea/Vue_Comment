@@ -25,14 +25,23 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
-export function createElement (
-  context: Component,
-  tag: any,
-  data: any,
-  children: any,
-  normalizationType: any,
-  alwaysNormalize: boolean
-): VNode | Array<VNode> {
+/**
+ * @desc 创建元素节点
+ * @param {Component} context
+ * @param {any} tag
+ * @param {any} data
+ * @param {any} children
+ * @param {any} normalizationType
+ * @param {boolean} alwaysNormalize 
+ */
+export function createElement(
+  context,
+  tag,
+  data,
+  children,
+  normalizationType,
+  alwaysNormalize
+) {
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
@@ -44,7 +53,7 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
-export function _createElement (
+export function _createElement(
   context: Component,
   tag?: string | Class<Component> | Function | Object,
   data?: VNodeData,
@@ -135,7 +144,7 @@ export function _createElement (
   }
 }
 
-function applyNS (vnode, ns, force) {
+function applyNS(vnode, ns, force) {
   vnode.ns = ns
   if (vnode.tag === 'foreignObject') {
     // use default namespace inside foreignObject
@@ -156,7 +165,7 @@ function applyNS (vnode, ns, force) {
 // ref #5318
 // necessary to ensure parent re-render when deep bindings like :style and
 // :class are used on slot nodes
-function registerDeepBindings (data) {
+function registerDeepBindings(data) {
   if (isObject(data.style)) {
     traverse(data.style)
   }
