@@ -22,10 +22,10 @@ import {
   invokeWithErrorHandling
 } from '../util/index'
 
-export let activeInstance: any = null
-export let isUpdatingChildComponent: boolean = false
+export let activeInstance = null
+export let isUpdatingChildComponent = false
 
-export function setActiveInstance(vm: Component) {
+export function setActiveInstance(vm) {
   const prevActiveInstance = activeInstance
   activeInstance = vm
   return () => {
@@ -33,7 +33,7 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
-export function initLifecycle (vm: Component) {
+export function initLifecycle (vm) {
   const options = vm.$options
 
   // locate first non-abstract parent
@@ -146,12 +146,14 @@ export function lifecycleMixin (Vue) {
     }
   }
 }
-
+/**
+ * @desc 将Vue实例挂载到DOM
+ */
 export function mountComponent (
-  vm: Component,
-  el: ?Element,
-  hydrating?: boolean
-): Component {
+  vm,
+  el,
+  hydrating
+) {
   vm.$el = el
   if (!vm.$options.render) {
     vm.$options.render = createEmptyVNode
@@ -175,6 +177,7 @@ export function mountComponent (
   }
   callHook(vm, 'beforeMount')
 
+  // 执行真正的挂载操作
   let updateComponent
   /* istanbul ignore if */
   if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -196,6 +199,8 @@ export function mountComponent (
     }
   } else {
     updateComponent = () => {
+      // _update 调用虚拟DOM的patch反复执行节点比对与渲染
+      // _render 执行渲染函数，得到一份最新的节点树
       vm._update(vm._render(), hydrating)
     }
   }
@@ -232,11 +237,11 @@ export function mountComponent (
 }
 
 export function updateChildComponent (
-  vm: Component,
-  propsData: ?Object,
-  listeners: ?Object,
-  parentVnode: MountedComponentVNode,
-  renderChildren: ?Array<VNode>
+  vm,
+  propsData,
+  listeners,
+  parentVnode,
+  renderChildren
 ) {
   if (process.env.NODE_ENV !== 'production') {
     isUpdatingChildComponent = true
@@ -286,7 +291,7 @@ export function updateChildComponent (
     const propKeys = vm.$options._propKeys || []
     for (let i = 0; i < propKeys.length; i++) {
       const key = propKeys[i]
-      const propOptions: any = vm.$options.props // wtf flow?
+      const propOptions = vm.$options.props // wtf flow?
       props[key] = validateProp(key, propOptions, propsData, vm)
     }
     toggleObserving(true)
@@ -318,7 +323,7 @@ function isInInactiveTree (vm) {
   return false
 }
 
-export function activateChildComponent (vm: Component, direct?: boolean) {
+export function activateChildComponent (vm, direct) {
   if (direct) {
     vm._directInactive = false
     if (isInInactiveTree(vm)) {
@@ -336,7 +341,7 @@ export function activateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
-export function deactivateChildComponent (vm: Component, direct?: boolean) {
+export function deactivateChildComponent (vm, direct) {
   if (direct) {
     vm._directInactive = true
     if (isInInactiveTree(vm)) {
@@ -352,7 +357,7 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
-export function callHook (vm: Component, hook: string) {
+export function callHook (vm, hook) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
   const handlers = vm.$options[hook]

@@ -17,15 +17,17 @@ const idToTemplate = cached(id => {
 })
 
 // compiler 版本的 $mount 实现
+// 函数劫持
 const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
-  el?: string | Element,
-  hydrating?: boolean
-): Component {
+  el,
+  hydrating
+) {
   el = el && query(el)
 
   /* istanbul ignore if */
   // Vue 不能挂载在 body、html 这样的根节点上
+  // eslint-disable-next-line
   if (el === document.body || el === document.documentElement) {
     process.env.NODE_ENV !== 'production' && warn(
       `Do not mount Vue to <html> or <body> - mount to normal elements instead.`
@@ -92,10 +94,11 @@ Vue.prototype.$mount = function (
  * Get outerHTML of elements, taking care
  * of SVG elements in IE as well.
  */
-function getOuterHTML (el: Element): string {
+function getOuterHTML (el) {
   if (el.outerHTML) {
     return el.outerHTML
   } else {
+  // eslint-disable-next-line
     const container = document.createElement('div')
     container.appendChild(el.cloneNode(true))
     return container.innerHTML

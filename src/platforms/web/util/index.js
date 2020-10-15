@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint-disable no-restricted-globals */
 
 import { warn } from 'core/util/index'
 
@@ -9,7 +10,7 @@ export * from './element'
 /**
  * Query an element selector if it's not an element already.
  */
-export function query (el: string | Element): Element {
+export function query (el) {
   if (typeof el === 'string') {
     const selected = document.querySelector(el)
     if (!selected) {
