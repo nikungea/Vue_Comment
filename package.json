@@ -76,6 +76,7 @@
     "@babel/register": "^7.0.0",
     "@types/node": "^12.12.0",
     "@types/webpack": "^4.4.22",
+    "@typescript-eslint/parser": "^4.4.1",
     "acorn": "^5.2.1",
     "babel-eslint": "^10.0.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
