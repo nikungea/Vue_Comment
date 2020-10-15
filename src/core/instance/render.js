@@ -1,6 +1,7 @@
 /* @flow */
 
 /**
+ * @desc 将$nextTick挂载到实例上
  * Vue 的 _render 方法是实例的一个私有方法，它用来把实例渲染成一个虚拟 Node。
  */
 
@@ -55,23 +56,27 @@ export function initRender (vm: Component) {
   }
 }
 
-export let currentRenderingInstance: Component | null = null
+export let currentRenderingInstance = null
 
 // for testing only
-export function setCurrentRenderingInstance (vm: Component) {
+export function setCurrentRenderingInstance (vm) {
   currentRenderingInstance = vm
 }
 
-export function renderMixin (Vue: Class<Component>) {
+export function renderMixin (Vue) {
   // install runtime convenience helpers
   installRenderHelpers(Vue.prototype)
 
-  Vue.prototype.$nextTick = function (fn: Function) {
+  /**
+   * @desc 将回调延迟到下次dom更新之后执行，自动绑定this到调用它的实例上，
+   * 适合更新状态之后对DOM进行操作，但此时获取不到更新后的DOM
+   */
+  Vue.prototype.$nextTick = function (fn) {
     return nextTick(fn, this)
   }
 
-  Vue.prototype._render = function (): VNode {
-    const vm: Component = this
+  Vue.prototype._render = function () {
+    const vm = this
     const { render, _parentVnode } = vm.$options
 
     if (_parentVnode) {

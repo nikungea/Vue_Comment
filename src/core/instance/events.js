@@ -1,5 +1,11 @@
 /* @flow */
-
+/**
+ * @desc 挂载事件相关的四个方法
+ * $on
+ * $once
+ * $off
+ * $emit
+ */
 import {
   tip,
   toArray,
@@ -9,7 +15,7 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
-export function initEvents (vm: Component) {
+export function initEvents (vm) {
   vm._events = Object.create(null)
   vm._hasHookEvent = false
   // init parent attached events
@@ -19,7 +25,7 @@ export function initEvents (vm: Component) {
   }
 }
 
-let target: any
+let target
 
 function add (event, fn) {
   target.$on(event, fn)
@@ -40,24 +46,26 @@ function createOnceHandler (event, fn) {
 }
 
 export function updateComponentListeners (
-  vm: Component,
-  listeners: Object,
-  oldListeners: ?Object
+  vm,
+  listeners,
+  oldListeners
 ) {
   target = vm
   updateListeners(listeners, oldListeners || {}, add, remove, createOnceHandler, vm)
   target = undefined
 }
 
-export function eventsMixin (Vue: Class<Component>) {
+export function eventsMixin (Vue) {
   const hookRE = /^hook:/
-  Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
-    const vm: Component = this
+  // 监听当前实例上的自定义事件，事件可以由$emit触发
+  Vue.prototype.$on = function (event, fn) {
+    const vm= this
     if (Array.isArray(event)) {
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$on(event[i], fn)
       }
     } else {
+      // vm._events是一个对象，用来储存事件在_init初始化时创建
       (vm._events[event] || (vm._events[event] = [])).push(fn)
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
@@ -68,8 +76,9 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
-  Vue.prototype.$once = function (event: string, fn: Function): Component {
-    const vm: Component = this
+  // // 监听当前实例上的自定义事件，与$on的区别是只触发一次
+  Vue.prototype.$once = function (event, fn) {
+    const vm = this
     function on () {
       vm.$off(event, on)
       fn.apply(vm, arguments)
@@ -79,14 +88,15 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
-  Vue.prototype.$off = function (event?: string | Array<string>, fn?: Function): Component {
-    const vm: Component = this
-    // all
+  // 移除自定义事件监视器
+  Vue.prototype.$off = function (event, fn) {
+    const vm = this
+    // all没有提供参数，移除所有事件
     if (!arguments.length) {
       vm._events = Object.create(null)
       return vm
     }
-    // array of events
+    // array of events为数组时，遍历移除
     if (Array.isArray(event)) {
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$off(event[i], fn)
@@ -115,8 +125,9 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
-  Vue.prototype.$emit = function (event: string): Component {
-    const vm: Component = this
+  // 触发自定义事件
+  Vue.prototype.$emit = function (event) {
+    const vm = this
     if (process.env.NODE_ENV !== 'production') {
       const lowerCaseEvent = event.toLowerCase()
       if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {

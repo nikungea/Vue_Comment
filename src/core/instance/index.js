@@ -1,5 +1,5 @@
 /**
- * 这里，是真正定义Vue最开始的地方
+ * @desc 这里，是真正定义Vue最开始的地方
  * 实际上就是一个用 Function 实现的类，只能通过 new Vue 去实例化它。
  */
 import { initMixin } from './init'
@@ -23,10 +23,15 @@ function Vue (options) {
  * Vue 按功能把这些扩展分散到多个模块中去实现，而不是在一个模块里实现所有。
  * 方便代码的维护和管理
  */
+// 其实到这里才有_init方法
 initMixin(Vue)
+// 挂载数据相关的实例方法
 stateMixin(Vue)
+// 挂载事件相关的实例方法
 eventsMixin(Vue)
+// 挂载生命周期相关的实例方法，$destroy, $forceUpdate
 lifecycleMixin(Vue)
+// 挂载了$nextTick方法
 renderMixin(Vue)
 
 export default Vue

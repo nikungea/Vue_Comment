@@ -1,6 +1,12 @@
 /* @flow */
 /* globals MutationObserver */
-
+/**
+ * @desc 这里其实是通过事件循环、宏任务、微任务的原理保证了事件在下个周期执行
+ * 事件循环会分别将执行栈中的宏任务和微任务加入不同的队列
+ * 先执行完事件队列中的微任务才会去执行宏任务事件队列中的一个宏任务
+ * dom渲染是在微任务执行完之后才进行的
+ * 使用时一定要先更改状态，再在this.$nextTick中去使用更改后的DOM进行操作
+ */
 import { noop } from 'shared/util'
 import { handleError } from './error'
 import { isIE, isIOS, isNative } from './env'
@@ -40,6 +46,7 @@ let timerFunc
 // Promise is available, we will use it:
 /* istanbul ignore next, $flow-disable-line */
 if (typeof Promise !== 'undefined' && isNative(Promise)) {
+  // 使用promise创建一个微任务
   const p = Promise.resolve()
   timerFunc = () => {
     p.then(flushCallbacks)
@@ -48,6 +55,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     // microtask queue but the queue isn't being flushed, until the browser
     // needs to do some other work, e.g. handle a timer. Therefore we can
     // "force" the microtask queue to be flushed by adding an empty timer.
+    // 创建一个宏任务
     if (isIOS) setTimeout(noop)
   }
   isUsingMicroTask = true
@@ -60,7 +68,9 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   // e.g. PhantomJS, iOS7, Android 4.4
   // (#6466 MutationObserver is unreliable in IE11)
   let counter = 1
+  // 使用MutationObserver创建一个微任务
   const observer = new MutationObserver(flushCallbacks)
+  // eslint-disable-next-line
   const textNode = document.createTextNode(String(counter))
   observer.observe(textNode, {
     characterData: true
@@ -84,7 +94,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
-export function nextTick (cb?: Function, ctx?: Object) {
+export function nextTick (cb, ctx) {
   let _resolve
   callbacks.push(() => {
     if (cb) {
@@ -102,6 +112,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
     timerFunc()
   }
   // $flow-disable-line
+  // 如果没有提供回调且当前环境支持Promise，返回一个Promise
   if (!cb && typeof Promise !== 'undefined') {
     return new Promise(resolve => {
       _resolve = resolve

@@ -1,5 +1,8 @@
 /* @flow */
 
+/**
+ * @desc 像Vue实例上挂载$watch, $set, $delete三个数据相关的方法
+ */
 import config from '../config'
 import Watcher from '../observer/watcher'
 import Dep, { pushTarget, popTarget } from '../observer/dep'
