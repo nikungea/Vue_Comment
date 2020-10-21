@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible"
+        content="ie=edge">
+  <title>标题</title>
+  <style>
+
+  </style>
+</head>
+
+<body>
+
+  <script>
+    let a = 6, b = 9;
+    function sTag(strings, ...args) {
+      console.log('strings :>> ', strings);
+      for (const arg of args) {
+        console.log('arg :>> ', arg);
+      }
+      return 'whatever'
+    }
+    let res = sTag`${a} + ${b} = ${a + b}`;
+    console.log('res :>> ', res);
+
+    let sym = Symbol('lhq');
+    let sym2 = sym;
+    console.log('sym :>> ', sym);
+    console.log('sym2 :>> ', sym2);
+    console.log('sym2 == sym :>> ', sym2 == sym);
+
+    let s1 = Symbol('s1');
+    let s2 = Symbol('s2');
+    let s3 = Symbol('s3');
+    let s4 = Symbol('s4');
+
+    let obj = {
+      [s1]: 'lhq'
+    }
+    obj[s2] = 'lqq'
+    console.log('obj :>> ', obj);
+    console.log('obj[s1] :>> ', obj[s1]);
+    Object.defineProperty(obj, s3, {
+      value: 'lhh',
+      configurable: true,
+      writable: true
+    });
+    console.log('obj :>> ', obj);
+    obj.name = 'forever';
+    let names = Object.getOwnPropertyNames(obj);
+    console.log('names :>> ', names);
+    let symbols = Object.getOwnPropertySymbols(obj);
+    console.log('symbols :>> ', symbols);
+    let desc = Object.getOwnPropertyDescriptors(obj);
+    console.log('desc :>> ', desc);
+
+    let allKeys = Reflect.ownKeys(obj);
+    console.log('allKeys :>> ', allKeys);
+
+    class Em {
+      constructor(max) {
+        this.max = max;
+        this.index = 0;
+      }
+      async *[Symbol.asyncIterator]() {
+        while (this.index < this.max) {
+          yield new Promise((resolve) => resolve(this.index++))
+        }
+      }
+    }
+    async function asy() {
+      let em = new Em(6);
+      for await (const i of em) {
+        console.log('i :>> ', i);
+      }
+    }
+    asy();
+  </script>
+</body>
+
+</html>
